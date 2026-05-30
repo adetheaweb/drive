@@ -1,0 +1,6 @@
+{
+  "name": "Google Drive Uploader",
+  "description": "Sebuah aplikasi web modern untuk mengunggah file, membuat folder, dan mengelola penyimpanan di Google Drive secara cepat dan aman.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,58 @@
+{
+  "entities": {
+    "public_files": {
+      "title": "Public Files",
+      "description": "Metadata for publicly uploaded and shared Google Drive files",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The Google Drive file ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the file"
+        },
+        "size": {
+          "type": "number",
+          "description": "The size of the file in bytes"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "The MIME type of the file"
+        },
+        "webViewLink": {
+          "type": "string",
+          "description": "The web view link for the Google Drive file"
+        },
+        "webContentLink": {
+          "type": "string",
+          "description": "The download link for the Google Drive file"
+        },
+        "createdTime": {
+          "type": "string",
+          "description": "The creation timestamp in ISO format"
+        },
+        "uploadedBy": {
+          "type": "string",
+          "description": "User email of the uploader"
+        },
+        "uploadedAt": {
+          "type": "string",
+          "description": "Server or client timestamp of upload"
+        },
+        "parentFolderId": {
+          "type": "string",
+          "description": "Optional Google Drive ID of parent folder if this file/folder belongs under a public folder"
+        }
+      },
+      "required": ["id", "name", "webViewLink"]
+    }
+  },
+  "firestore": {
+    "/public_files/{fileId}": {
+      "schema": "public_files",
+      "description": "Collection of file assets Shared Publicly"
+    }
+  }
+}
