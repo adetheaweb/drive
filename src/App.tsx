@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import type { User } from 'firebase/auth';
 import { 
-  Cloud, Lock, RefreshCw, Folder, Sparkles, FolderUp, CheckCircle, ShieldAlert, CheckCircle2 
+  Cloud, Lock, RefreshCw, Folder, Sparkles, FolderUp, CheckCircle, ShieldAlert, CheckCircle2, AlertTriangle 
 } from 'lucide-react';
 import { initAuth, googleSignIn, logout, savePublicFile, deletePublicFile, fetchPublicFiles } from './lib/firebase';
 import { 
@@ -413,6 +413,8 @@ export default function App() {
 
   // LOGIN PAGE rendering
   if (needsAuth) {
+    const isInsideIframe = window.self !== window.top;
+
     return (
       <div id="login-layout" className="min-h-screen bg-[#F8F9FA] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
@@ -433,6 +435,27 @@ export default function App() {
         </div>
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+          {isInsideIframe && (
+            <div className="mb-6 bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 text-amber-800 text-xs shadow-sm shadow-amber-100 flex flex-col items-start gap-3 animate-fadeIn">
+              <div className="flex items-start space-x-3">
+                <AlertTriangle className="w-5 h-5 flex-shrink-0 text-amber-600 mt-0.5" />
+                <div>
+                  <p className="font-bold text-[13px] text-amber-900 mb-1">
+                    ⚠️ PENTING: BUKA DI TAB BARU AGAR LOGIN TIDAK MENUTUP
+                  </p>
+                  <p className="leading-relaxed text-amber-800 text-[11px]">
+                    Anda sedang membuka aplikasi ini di dalam <strong>panel pratinjau (iframe)</strong>. Peramban modern (seperti Chrome, Edge, Safari, Brave) memblokir transfer data login di dalam iframe demi privasi.
+                  </p>
+                </div>
+              </div>
+              <div className="mt-1 flex flex-col gap-2 w-full">
+                <div className="text-amber-900 font-semibold bg-amber-100/70 p-2.5 rounded-xl border border-amber-200 text-[11px] leading-relaxed">
+                  <strong>👉 Solusi Mudah:</strong> Silakan klik tombol <span className="bg-amber-200 border border-amber-300 px-1.5 py-0.5 rounded font-extrabold text-amber-950 text-[10px]">Open in New Tab</span> yang berada di <strong>ujung kanan atas layar pratinjau Google AI Studio</strong> Anda untuk membuka aplikasi di tab penuh, lalu masuk kembali dengan Google.
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="bg-white py-8 px-6 sm:px-10 rounded-2xl border border-slate-200 shadow-md shadow-slate-100 flex flex-col items-center">
             <h3 className="text-center font-bold text-slate-700 text-base mb-2">
               Sambungkan Google Drive
@@ -442,68 +465,87 @@ export default function App() {
             </p>
 
             {authError && (
-              <div className="mb-5 w-full bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-600 flex flex-col items-start gap-2 animate-fadeIn animate-duration-150">
-                <div className="flex items-start space-x-2.5">
-                  <ShieldAlert className="w-4.5 h-4.5 flex-shrink-0 text-rose-500 mt-0.5" />
-                  <span className="font-semibold">{authError}</span>
+              <div className="mb-5 w-full bg-rose-50 border border-rose-200 rounded-xl p-4 text-xs text-slate-700 flex flex-col items-start gap-3.5 animate-fadeIn">
+                <div className="flex items-start space-x-2.5 text-rose-600">
+                  <ShieldAlert className="w-5 h-5 flex-shrink-0 text-rose-500 mt-0.5" />
+                  <span className="font-bold text-[12px]">{authError}</span>
                 </div>
                 
-                {isDomainError && (
-                  <div className="mt-3 pt-3 border-t border-rose-200 w-full text-slate-700">
-                    <p className="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2">
-                      💡 CARA MENYELESAIKAN MASALAH INI:
-                    </p>
-                    <p className="mb-2 leading-relaxed text-slate-600">
-                      Firebase Authentication mengharuskan semua domain hosting diotorisasi. Silakan ikuti langkah-langkah berikut:
-                    </p>
-                    <ol className="list-decimal pl-4 space-y-2 mb-3 text-slate-600 font-mono text-[10px]">
-                      <li>
-                        Buka Firebase Console &gt; Proyek Anda (<span className="font-bold text-slate-800">strong-imprint-mw1xt</span>)
-                      </li>
-                      <li>
-                        Pilih menu <span className="font-bold text-slate-800">Build</span> &gt; <span className="font-bold text-slate-800">Authentication</span> &gt; tab <span className="font-bold text-slate-800">Settings</span>
-                      </li>
-                      <li>
-                        Temukan opsi <span className="font-bold text-slate-800">Authorized domains</span> (Domain yang diotorisasi)
-                      </li>
-                      <li>
-                        Klik tombol <span className="font-bold text-slate-800">Add domain</span> lalu tambahkan kedua domain di bawah ini satu per satu:
-                      </li>
-                    </ol>
+                <div className="pt-3.5 border-t border-rose-100 w-full">
+                  <p className="font-bold text-slate-900 text-[11px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    ⚙️ LANGKAH DETAIL UNTUK MENYELESAIKAN:
+                  </p>
+                  <p className="mb-3 leading-relaxed text-slate-600 text-[11px]">
+                    Firebase Authentication melarang pendaftaran atau otentikasi login dari domain baru sebelum didaftarkan ke konsol pengembang Anda.
+                  </p>
+                  
+                  <ol className="space-y-3 pl-1 text-[11px] text-slate-600">
+                    <li className="flex gap-2">
+                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">1</span>
+                      <span>Buka konsol Firebase Anda di browser: <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-semibold font-mono">https://console.firebase.google.com/</a></span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">2</span>
+                      <span>Klik dan masuk ke dalam proyek Anda yang bernama: <strong className="text-slate-800 font-mono text-[10.5px] bg-slate-100 px-1 py-0.5 rounded">strong-imprint-mw1xt</strong></span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">3</span>
+                      <span>Di menu sebelah kiri, cari dan klik kelompok <strong className="text-slate-800">Build</strong> lalu pilih menu <strong className="text-slate-800">Authentication</strong></span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">4</span>
+                      <span>Di baris tab atas halaman Authentication, pilih tab <strong className="text-slate-800">Settings</strong></span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">5</span>
+                      <span>Di bawah menu sebelah kiri tab Settings tersebut, klik menu <strong className="text-slate-800">Authorized domains</strong> (Domain yang diotorisasi)</span>
+                    </li>
+                    <li className="flex gap-2">
+                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">6</span>
+                      <span>Klik tombol <strong className="text-blue-600 font-semibold">+ Add domain</strong> (Tambahkan domain), kemudian isi dan tambahkan kedua domain di bawah ini secara bergantian:</span>
+                    </li>
+                  </ol>
 
-                    <p className="font-bold text-slate-800 text-[10px] mt-2 mb-1">Daftar domain yang harus ditambahkan:</p>
-                    <div className="space-y-1 text-[10px] font-mono">
-                      <div className="flex items-center justify-between p-1.5 bg-slate-150 border border-slate-300 rounded-lg text-slate-800 bg-slate-100">
-                        <span>{window.location.hostname}</span>
+                  <div className="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">DOMAIN 1 (PRATINJAU ANDA):</p>
+                      <div className="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-mono text-[10.5px]">
+                        <span className="truncate mr-2 select-all">{window.location.hostname}</span>
                         <button 
+                          type="button"
                           onClick={() => {
                             navigator.clipboard.writeText(window.location.hostname);
-                            alert('Salin sukses: ' + window.location.hostname);
+                            alert('Salin berhasil: ' + window.location.hostname);
                           }}
-                          className="px-1.5 py-0.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[9px] rounded-sm cursor-pointer ml-1"
-                        >
-                          Salin
-                        </button>
-                      </div>
-                      <div className="flex items-center justify-between p-1.5 bg-slate-150 border border-slate-300 rounded-lg text-slate-800 bg-slate-100">
-                        <span>ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app</span>
-                        <button 
-                          onClick={() => {
-                            navigator.clipboard.writeText('ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app');
-                            alert('Salin sukses!');
-                          }}
-                          className="px-1.5 py-0.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[9px] rounded-sm cursor-pointer ml-1"
+                          className="px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-[10px] rounded-lg cursor-pointer transition-colors shrink-0"
                         >
                           Salin
                         </button>
                       </div>
                     </div>
-                    
-                    <p className="mt-3 font-semibold text-slate-800 text-[10px]">
-                      Setelah kedua domain ditambahkan di panel Firebase Console, silakan klik tombol "Sign in with Google" di bawah kembali.
-                    </p>
+
+                    <div>
+                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">DOMAIN 2 (PRATINJAU UTAMA):</p>
+                      <div className="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-mono text-[10.5px]">
+                        <span className="truncate mr-2 select-all">ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app</span>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            navigator.clipboard.writeText('ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app');
+                            alert('Salin berhasil!');
+                          }}
+                          className="px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-[10px] rounded-lg cursor-pointer transition-colors shrink-0"
+                        >
+                          Salin
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                )}
+                  
+                  <p className="mt-4 text-[11px] font-bold text-slate-800 leading-relaxed">
+                    💡 Setelah kedua domain di atas berhasil ditambahkan ke panel Firebase Console, mohon buka tab baru aplikasi Anda lalu klik tombol "Sign in with Google" di bawah ini!
+                  </p>
+                </div>
               </div>
             )}
 
