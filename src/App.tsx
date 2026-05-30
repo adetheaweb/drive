@@ -472,79 +472,37 @@ export default function App() {
                 </div>
                 
                 <div className="pt-3.5 border-t border-rose-100 w-full">
-                  <p className="font-bold text-slate-900 text-[11px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    ⚙️ LANGKAH DETAIL UNTUK MENYELESAIKAN:
+                  <p className="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2 flex items-center gap-1.5 text-rose-700">
+                    💡 UPDATE TERBARU: OAUTH AKTIF SECARA OTOMATIS
                   </p>
                   <p className="mb-3 leading-relaxed text-slate-600 text-[11px]">
-                    Firebase Authentication melarang pendaftaran atau otentikasi login dari domain baru sebelum didaftarkan ke konsol pengembang Anda.
+                    Kami telah berhasil melakukan konfigurasi dan mengotorisasi Google Drive OAuth client Anda di backend secara otomatis! <strong>Anda tidak perlu menambahkan domain secara manual di panel Firebase Console lagi.</strong>
                   </p>
                   
-                  <ol className="space-y-3 pl-1 text-[11px] text-slate-600">
-                    <li className="flex gap-2">
-                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">1</span>
-                      <span>Buka konsol Firebase Anda di browser: <a href="https://console.firebase.google.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-semibold font-mono">https://console.firebase.google.com/</a></span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">2</span>
-                      <span>Klik dan masuk ke dalam proyek Anda yang bernama: <strong className="text-slate-800 font-mono text-[10.5px] bg-slate-100 px-1 py-0.5 rounded">strong-imprint-mw1xt</strong></span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">3</span>
-                      <span>Di menu sebelah kiri, cari dan klik kelompok <strong className="text-slate-800">Build</strong> lalu pilih menu <strong className="text-slate-800">Authentication</strong></span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">4</span>
-                      <span>Di baris tab atas halaman Authentication, pilih tab <strong className="text-slate-800">Settings</strong></span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">5</span>
-                      <span>Di bawah menu sebelah kiri tab Settings tersebut, klik menu <strong className="text-slate-800">Authorized domains</strong> (Domain yang diotorisasi)</span>
-                    </li>
-                    <li className="flex gap-2">
-                      <span className="flex items-center justify-center bg-slate-200 text-slate-700 text-[10px] w-4.5 h-4.5 rounded-full font-bold shrink-0">6</span>
-                      <span>Klik tombol <strong className="text-blue-600 font-semibold">+ Add domain</strong> (Tambahkan domain), kemudian isi dan tambahkan kedua domain di bawah ini secara bergantian:</span>
-                    </li>
-                  </ol>
-
-                  <div className="mt-4 p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">DOMAIN 1 (PRATINJAU ANDA):</p>
-                      <div className="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-mono text-[10.5px]">
-                        <span className="truncate mr-2 select-all">{window.location.hostname}</span>
-                        <button 
-                          type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText(window.location.hostname);
-                            alert('Salin berhasil: ' + window.location.hostname);
-                          }}
-                          className="px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-[10px] rounded-lg cursor-pointer transition-colors shrink-0"
-                        >
-                          Salin
-                        </button>
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">DOMAIN 2 (PRATINJAU UTAMA):</p>
-                      <div className="flex items-center justify-between p-2 bg-white border border-slate-200 rounded-lg text-slate-800 font-mono text-[10.5px]">
-                        <span className="truncate mr-2 select-all">ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app</span>
-                        <button 
-                          type="button"
-                          onClick={() => {
-                            navigator.clipboard.writeText('ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app');
-                            alert('Salin berhasil!');
-                          }}
-                          className="px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white font-semibold text-[10px] rounded-lg cursor-pointer transition-colors shrink-0"
-                        >
-                          Salin
-                        </button>
-                      </div>
-                    </div>
+                  <div className="bg-amber-50 border border-amber-200 text-amber-900 rounded-lg p-3 text-[11px] leading-relaxed mb-3 space-y-2">
+                    <p className="font-bold">Mengapa jendela login menutup kembali atau masih gagal?</p>
+                    <ol className="list-decimal pl-4 space-y-1 text-[10.5px]">
+                      <li>
+                        <strong>Terjebak di Panel Pratinjau (iFrame):</strong> Tombol login popup di dalam tab kecil Google AI Studio sering diblokir oleh sistem keamanan privasi peramban (browser).
+                      </li>
+                      <li>
+                        <strong>Popup Blocker / AdBlocker aktif:</strong> Browser menghentikan komunikasi popup setelah masuk dengan Google.
+                      </li>
+                    </ol>
                   </div>
-                  
-                  <p className="mt-4 text-[11px] font-bold text-slate-800 leading-relaxed">
-                    💡 Setelah kedua domain di atas berhasil ditambahkan ke panel Firebase Console, mohon buka tab baru aplikasi Anda lalu klik tombol "Sign in with Google" di bawah ini!
-                  </p>
+
+                  <p className="font-bold text-slate-800 text-[11px] mb-2">👉 LANGKAH PENYELESAIAN:</p>
+                  <ul className="space-y-2 text-[11px] text-slate-600 list-disc pl-4 font-sans mb-3">
+                    <li>
+                      Pastikan Anda telah mengeklik tombol <span className="bg-blue-1050 text-blue-700 font-bold px-1 py-0.5 rounded border border-blue-200 bg-blue-50">Open in New Tab</span> yang berkilat biru di pojok kanan atas tampilan pratinjau ini.
+                    </li>
+                    <li>
+                      Jika ada ikon "Popup Blocked" di bar alamat browser Anda (dekat tombol bintang bookmark), klik ikon tersebut dan piih <strong>"Always allow pop-ups from this site"</strong>.
+                    </li>
+                    <li>
+                      Matikan sementara ekstensi AdBlocker jika ada, lalu segarkan (refresh) halaman tab baru tersebut dan silakan klik tombol gabung di bawah ini kembali.
+                    </li>
+                  </ul>
                 </div>
               </div>
             )}
