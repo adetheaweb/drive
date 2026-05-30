@@ -19,6 +19,7 @@ export default function App() {
   const [needsAuth, setNeedsAuth] = useState(true);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [authError, setAuthError] = useState('');
+  const [isDomainError, setIsDomainError] = useState(false);
 
   // Storage / Drive Data
   const [quota, setQuota] = useState<StorageQuota | null>(null);
@@ -135,6 +136,7 @@ export default function App() {
   const handleLogin = async () => {
     setIsLoggingIn(true);
     setAuthError('');
+    setIsDomainError(false);
     try {
       const result = await googleSignIn();
       if (result) {
@@ -146,7 +148,14 @@ export default function App() {
     } catch (err: any) {
       console.error('Login action error:', err);
       // Detailed human friendly error message
-      setAuthError(err.message || 'Terjadi kesalahan saat otentikasi Google Account.');
+      const errMsg = err.message || '';
+      const errCode = err.code || '';
+      if (errCode === 'auth/unauthorized-domain' || errMsg.includes('unauthorized-domain') || errMsg.includes('authorized-domain')) {
+        setIsDomainError(true);
+        setAuthError('Firebase Error: Domain aplikasi belum diotorisasi untuk otentikasi (auth/unauthorized-domain).');
+      } else {
+        setAuthError(err.message || 'Terjadi kesalahan saat otentikasi Google Account.');
+      }
     } finally {
       setIsLoggingIn(false);
     }
@@ -433,9 +442,68 @@ export default function App() {
             </p>
 
             {authError && (
-              <div className="mb-5 w-full bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-600 flex items-start space-x-2.5 animate-fadeIn">
-                <ShieldAlert className="w-4.5 h-4.5 flex-shrink-0 text-rose-500 mt-0.5" />
-                <span className="font-medium">{authError}</span>
+              <div className="mb-5 w-full bg-rose-50 border border-rose-200 rounded-xl p-3 text-xs text-rose-600 flex flex-col items-start gap-2 animate-fadeIn animate-duration-150">
+                <div className="flex items-start space-x-2.5">
+                  <ShieldAlert className="w-4.5 h-4.5 flex-shrink-0 text-rose-500 mt-0.5" />
+                  <span className="font-semibold">{authError}</span>
+                </div>
+                
+                {isDomainError && (
+                  <div className="mt-3 pt-3 border-t border-rose-200 w-full text-slate-700">
+                    <p className="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2">
+                      💡 CARA MENYELESAIKAN MASALAH INI:
+                    </p>
+                    <p className="mb-2 leading-relaxed text-slate-600">
+                      Firebase Authentication mengharuskan semua domain hosting diotorisasi. Silakan ikuti langkah-langkah berikut:
+                    </p>
+                    <ol className="list-decimal pl-4 space-y-2 mb-3 text-slate-600 font-mono text-[10px]">
+                      <li>
+                        Buka Firebase Console &gt; Proyek Anda (<span className="font-bold text-slate-800">strong-imprint-mw1xt</span>)
+                      </li>
+                      <li>
+                        Pilih menu <span className="font-bold text-slate-800">Build</span> &gt; <span className="font-bold text-slate-800">Authentication</span> &gt; tab <span className="font-bold text-slate-800">Settings</span>
+                      </li>
+                      <li>
+                        Temukan opsi <span className="font-bold text-slate-800">Authorized domains</span> (Domain yang diotorisasi)
+                      </li>
+                      <li>
+                        Klik tombol <span className="font-bold text-slate-800">Add domain</span> lalu tambahkan kedua domain di bawah ini satu per satu:
+                      </li>
+                    </ol>
+
+                    <p className="font-bold text-slate-800 text-[10px] mt-2 mb-1">Daftar domain yang harus ditambahkan:</p>
+                    <div className="space-y-1 text-[10px] font-mono">
+                      <div className="flex items-center justify-between p-1.5 bg-slate-150 border border-slate-300 rounded-lg text-slate-800 bg-slate-100">
+                        <span>{window.location.hostname}</span>
+                        <button 
+                          onClick={() => {
+                            navigator.clipboard.writeText(window.location.hostname);
+                            alert('Salin sukses: ' + window.location.hostname);
+                          }}
+                          className="px-1.5 py-0.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[9px] rounded-sm cursor-pointer ml-1"
+                        >
+                          Salin
+                        </button>
+                      </div>
+                      <div className="flex items-center justify-between p-1.5 bg-slate-150 border border-slate-300 rounded-lg text-slate-800 bg-slate-100">
+                        <span>ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app</span>
+                        <button 
+                          onClick={() => {
+                            navigator.clipboard.writeText('ais-pre-k63lqblsb6tvxky7ijbpep-257707860587.asia-east1.run.app');
+                            alert('Salin sukses!');
+                          }}
+                          className="px-1.5 py-0.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-[9px] rounded-sm cursor-pointer ml-1"
+                        >
+                          Salin
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <p className="mt-3 font-semibold text-slate-800 text-[10px]">
+                      Setelah kedua domain ditambahkan di panel Firebase Console, silakan klik tombol "Sign in with Google" di bawah kembali.
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
